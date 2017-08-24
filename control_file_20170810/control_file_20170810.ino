@@ -1,12 +1,13 @@
 // Import library
-#include <Adafruit_FloraPixel.h>
 #include <Adafruit_NeoPixel.h>
 
 #define PIN 6
 
 //Configuration
-uint8_t Brightness = 30;
-uint8_t Pixels = 120;
+uint8_t Brightness = 20;
+uint8_t Pixels = 71;
+uint8_t SingleColorCycleSpeed = 30;
+uint8_t RainbowColorCycleSpeed = 15;
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = pin number (most are valid)
@@ -24,24 +25,32 @@ void setup() {
 }
 
 void loop() {
-  rainbowCycleFlame(5);
-}
-
-void originalLoop() {
   // Some example procedures showing how to display to the pixels:
   // From August 10th, 2017
-  colorWipe(strip.Color(255, 0, 0), 25); // Red
-  rainbowCycle(1);
-  colorWipe(strip.Color(0, 255, 0), 25); // Green
-  rainbow(5);
-  colorWipe(strip.Color(0, 0, 255), 25); // Blue
-  rainbow(5);
-  colorWipe(strip.Color(255, 255, 0), 25);
-  rainbow(5); 
-  colorWipe(strip.Color(0, 255, 255), 25);
-  rainbow(5);
-  colorWipe(strip.Color(255, 0, 255), 25);
-  rainbowCycle(1);
+  rainbowCycle(RainbowColorCycleSpeed);
+  flash(10,10,15,255,0,0); //flash red
+  rainbowCycle(RainbowColorCycleSpeed);
+  colorWipe(strip.Color(153, 0, 255), SingleColorCycleSpeed); // scroll Purple
+  rainbow(RainbowColorCycleSpeed);
+  rainbowCycle(RainbowColorCycleSpeed);
+  flash(10,10,15,255,255,0); //flash yellow
+  rainbowCycle(RainbowColorCycleSpeed);
+  colorWipe(strip.Color(255, 0, 255), SingleColorCycleSpeed); // scroll Pink
+  rainbowCycle(RainbowColorCycleSpeed);
+  flash(10,10,15,255,0,153); //flash orange
+}
+
+void flash(uint8_t speed, uint8_t cycles, uint8_t wait, uint8_t r, uint8_t g, uint8_t b) {
+  uint16_t i,j,k;
+  for(k=0; k<cycles; k++) {
+    for(j=0; j<(256/speed); j++) {
+      for(i=0; i<strip.numPixels(); i++) {
+        strip.setPixelColor(i, strip.Color((j*speed % 255) * r/255, (j*speed % 255) * g/255, (j*speed % 255) * b/255));
+      }
+      delay(wait);
+      strip.show();
+    }
+  }
 }
 
 // Fill the dots one after the other with a color
@@ -69,7 +78,7 @@ void rainbow(uint8_t wait) {
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
 
-  for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
+  for(j=0; j<256; j++) {
     for(i=0; i< strip.numPixels(); i++) {
       strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
     }
@@ -89,45 +98,5 @@ uint32_t Wheel(byte WheelPos) {
   } else {
    WheelPos -= 170;
    return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
-  }
-}
-
-//
-//FOR FLAME JACKET
-//
-
-// Input a value 0 to 255 to get a color value.
-// The colours are a transition r - g - b - back to r.
-uint32_t WheelFlame(byte WheelPos) {
-  if(WheelPos < 127.5) {
-   return strip.Color(WheelPos * 2, 255 - WheelPos * 2, 0);
-  } else {
-   WheelPos -= 127.5;
-   return strip.Color(255 - WheelPos * 2, WheelPos * 2, 0);
-  }
-}
-
-void rainbowFlame(uint8_t wait) {
-  uint16_t i, j;
-
-  for(j=0; j<256; j++) {
-    for(i=0; i<strip.numPixels(); i++) {
-      strip.setPixelColor(i, WheelFlame((i+j) & 255));
-    }
-    strip.show();
-    delay(wait);
-  }
-}
-
-// Slightly different, this makes the rainbow equally distributed throughout
-void rainbowCycleFlame(uint8_t wait) {
-  uint16_t i, j;
-
-  for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
-    for(i=0; i< strip.numPixels(); i++) {
-      strip.setPixelColor(i, WheelFlame(((i * 256 / strip.numPixels()) + j) & 255));
-    }
-    strip.show();
-    delay(wait);
   }
 }
