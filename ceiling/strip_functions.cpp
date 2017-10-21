@@ -22,7 +22,7 @@ boolean checkButton() {
 void setBrightness() {
   // convert analogRead's range of 0 to 1023 to brightness range 0 to 255
   //uint8_t brightness = map(analogRead(_pin_pot), 0, 1023, 0, 255);
-  uint8_t brightness = 75;
+  uint8_t brightness = 50;
   strip.setBrightness(brightness);
 }
 
