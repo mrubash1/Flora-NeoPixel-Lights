@@ -12,7 +12,7 @@ int
   minLvlAvg = 0,      // For dynamic adjustment of graph low & high
   maxLvlAvg = 512;
 
-uint8_t  _num_groups  = 7;  // Number of pixels in strand
+uint8_t  _num_groups  = 2;  // Number of pixels in strand
 uint16_t _led_per_grp = ( _num_led / _num_groups );  // Number of pixels in strand
 uint8_t  _dc_offset   = 0;  // DC offset in mic signal - if unusure, leave 0
 uint8_t  _noise       = 10;  // Noise/hum/interference in mic signal
@@ -24,7 +24,8 @@ void setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b){
     if( i % 2 == 0 ) {
       strip.setPixelColor( (n + i * _led_per_grp ),r,g,b);
     } else {
-      strip.setPixelColor( (n + i * _led_per_grp ),r,g,b);
+      //reverse the number order for every other mini strand
+      strip.setPixelColor( ( (_led_per_grp-n) + i * _led_per_grp ),r,g,b);
     }
   }
 }
@@ -34,7 +35,7 @@ void setPixelColor(uint16_t n, uint32_t c){
     if( i % 2 == 0 ) {
       strip.setPixelColor( (n + i * _led_per_grp ),c);
     } else {
-      strip.setPixelColor( (n + i * _led_per_grp ),c);
+      strip.setPixelColor( ( (_led_per_grp-n) + i * _led_per_grp ),c);
     }
   }
 }

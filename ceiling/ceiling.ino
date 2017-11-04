@@ -9,7 +9,7 @@
 int lightMode = -1; // one less than we want bc interrupt runs at beginning apparently
 
 #include "strip_functions.h"
-uint16_t _num_led = 72; // Number of pixels in strand
+uint16_t _num_led = 71; // Number of pixels in strand
 uint8_t _pin_led = 6; // NeoPixel LED strand is connected to this pin
 uint8_t _pin_pot = 9; // using 1K potentiometer
 extern boolean checkButton();
@@ -75,6 +75,7 @@ void loop() {
 
   checkButton();
 
+  
   switch (lightMode) {
     default:
       // we exceeded defined modes, reset and fall through
@@ -83,26 +84,48 @@ void loop() {
       colorWipe(strip.Color(0, 0, 0), 0);
       delay(20);
       break;
-    case 1: rainbowSingle(3); break;
-    case 2: rainbowCycle(1); break;
-    case 3: rainbow(1); break;
-    case 4:
-      pulse(strip.Color(255, 0, 0), 0); //White
+    case 1: //Rainbow drop
+      volMeter(1,255); 
       break;
-    case 6:
-      pulse(strip.Color(255, 0, 255), 0); //Pink
+    case 2: 
+      rainbowSingle(3); 
+      break;
+    case 3: 
+      rainbowCycle(1); 
+      break;
+    case 4:
+      pulse(strip.Color(255, 0, 0), 0); //Red
+      colorWipe(strip.Color(0, 0, 0), 0);
+      break;
+    case 5: 
+      volMeter(1,120); 
+      break;
+    case 6: 
+      volMeter(120,220); 
       break;
     case 7:
-      pulse(strip.Color(255, 255, 0), 0); //Yellow
+      volMeter(220,250); 
       break;
-    case 8:
+  }
+  
+
+  /*
+  switch (lightMode) {
+    default:
+      // we exceeded defined modes, reset and fall through
+      lightMode = 0;
+    case 0:
+      colorWipe(strip.Color(0, 0, 0), 0);
+      delay(20);
+      break;
+    case 1:
       pulse(strip.Color(255, 0, 0), 0); //Red
       break;
-    case 9: volMeter(  1,255); break;
-    case 10: volMeter(120,220); break;
-    case 11: volMeter(220,250); break;
-    case 12: volMeter( 20, 60); break;
+    case 2:
+      pulse(strip.Color(map(analogRead(_pin_pot), 0, 1023, 0, 255),0,255), 0);
+      break;
   }
+  */
 
 }
 
