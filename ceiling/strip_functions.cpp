@@ -87,8 +87,23 @@ void rainbowCycle(uint8_t wait) {
           // casting to uint32_t lets us handle strips longer than 256 pixels
           // since that would result in number larger than 32K, causing wraparound
           // to negative number
-          ( (uint8_t) ( (uint32_t) i * 256 / strip.numPixels()) + j) & 255
+          ( (uint8_t) ( (uint32_t) i * 256 / strip.numPixels()) + j) & 255 // ORIGINAL
         )
+      );
+    }
+    strip.show();
+    delay(wait);
+  }
+}
+
+void purpleCycle(uint8_t wait) {
+  uint16_t i, j;
+  for (j=120; j<180; j++) { // cycle blue and purple 
+    if( checkButton() ){ return; };
+    for(i=0; i< strip.numPixels(); i++) {
+      strip.setPixelColor(i,
+        Wheel(
+          ( (uint8_t) ( (uint32_t) (i * 60 + 120) / strip.numPixels()) + j) & 180 )
       );
     }
     strip.show();
@@ -113,7 +128,7 @@ void colorWipe(uint32_t c, uint8_t wait) {
 //Rainbow Program
 void rainbowSingle(int wait) {
   uint16_t i, j;
-  for(j=0; j<256; j++) {
+  for(j=0; j<256; j++) { //all color
     // kind of a hack to allow negative wait value to speed rainbow by
     // skipping colors, otherwise 0 would be fast as chip could process
     if(wait < 0 &&  j % ( -1 * wait ) != 0){
@@ -122,6 +137,32 @@ void rainbowSingle(int wait) {
     if( checkButton() ){ return; };
     for(i=0; i<strip.numPixels(); i++) {
       strip.setPixelColor(i, Wheel(j));
+    }
+    strip.show();
+    if(wait > 0){
+      delay(wait);
+    }
+  }
+}
+
+void purpleSingle(int wait) {
+  uint16_t i, j;
+  for (j=120; j<260; j++) { 
+    if(wait < 0 &&  j % ( -1 * wait ) != 0){
+      continue; 
+    }
+    if( checkButton() ){ return; };
+    //first ramp up to 200
+    if(j<=190){
+      for(i=0; i<strip.numPixels(); i++) {
+        strip.setPixelColor(i, Wheel(j));
+      }
+    }
+    //then ramp back towards 120
+    if(j>190){
+      for(i=0; i<strip.numPixels(); i++) {
+        strip.setPixelColor(i, Wheel((190*2)-j));
+      }
     }
     strip.show();
     if(wait > 0){

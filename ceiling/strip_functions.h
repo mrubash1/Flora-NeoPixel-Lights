@@ -13,5 +13,7 @@ void pulse(uint32_t c, int w);
 void rainbow(uint8_t wait);
 void rainbowCycle(uint8_t wait);
 void rainbowSingle(int wait);
+void purpleCycle(uint8_t wait);
+void purpleSingle(int wait);
 
 uint32_t Wheel(byte WheelPos);
