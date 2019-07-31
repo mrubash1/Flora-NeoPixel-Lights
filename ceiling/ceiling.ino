@@ -12,7 +12,7 @@ int lightMode = -1; // one less than we want bc interrupt runs at beginning appa
 uint16_t _num_led = 71; // Number of pixels in strand
 uint8_t _pin_led = 6; // NeoPixel LED strand is connected to this pin
 uint8_t _pin_pot = 9; // using 1K potentiometer
-uint8_t brightness = 50; // brightness
+uint8_t brightness = 30; // brightness
 extern boolean checkButton();
 
 #include "sound_reactive.h"
@@ -86,17 +86,24 @@ void loop() {
       delay(20);
       break;
     case 1: 
-      purpleSingle(20); 
+      rainbowSingle(1); 
       break;
     case 2: 
-      purpleCycle(50); 
+      rainbowCycle(3); 
       break;
     case 3:
-      pulse(strip.Color(75,0,130), 0); //Indigo
+      pulse(strip.Color(205,0,137), 0); //pink
       colorWipe(strip.Color(0, 0, 0), 0);
       break;
-    case 4: //Blue Purple volume responsive
-      volMeter(120,190); 
+    case 4:
+      pulse(strip.Color(255,170,0), 0); //yellow
+      colorWipe(strip.Color(0, 0, 0), 0);
+      break;
+    case 5: //Rainbow volume responsive
+      volMeter(1,255); 
+      break;
+    case 6: //Blue Green volume responsive
+      volMeter(1,120); 
       break;
   }
   
